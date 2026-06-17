@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GET KEY</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#000;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:420px;
+    background:#111;
+    border-radius:22px;
+    padding:35px 25px;
+    border:1px solid #222;
+    box-shadow:0 0 25px rgba(0,255,120,0.15);
+    text-align:center;
+}
+
+.title{
+    font-size:34px;
+    font-weight:900;
+    color:#00ff99;
+    margin-bottom:30px;
+    letter-spacing:2px;
+}
+
+.key-box{
+    width:100%;
+    background:#1a1a1a;
+    border:1px solid #333;
+    border-radius:14px;
+    padding:18px;
+    font-size:22px;
+    font-weight:bold;
+    color:#00ff99;
+    margin-bottom:20px;
+    word-break:break-word;
+}
+
+.copy-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#00ff99;
+    color:black;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.copy-btn:hover{
+    transform:scale(1.03);
+}
+
+.status{
+    margin-top:18px;
+    color:#00ff99;
+    font-size:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+        GET KEY
+    </div>
+
+    <!-- KEY SHOW -->
+
+    <div class="key-box" id="showKey">
+        Loading...
+    </div>
+
+    <!-- COPY BUTTON -->
+
+    <button class="copy-btn" onclick="copyKey()">
+        COPY KEY
+    </button>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getFirestore,
+    doc,
+    onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// FIREBASE CONFIG
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDF0aKtdUnBUjyE1SyBUV9ZZutogikl9Co",
+
+    authDomain: "admin-key-947aa.firebaseapp.com",
+
+    projectId: "admin-key-947aa",
+
+    storageBucket: "admin-key-947aa.firebasestorage.app",
+
+    messagingSenderId: "769520589191",
+
+    appId: "1:769520589191:web:09349f9d916c58a897db22"
+
+};
+
+// INIT
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+// LIVE KEY UPDATE
+
+let currentKey = "";
+
+const docRef = doc(db,"settings","config");
+
+onSnapshot(docRef,(docSnap)=>{
+
+    if(docSnap.exists()){
+
+        const data = docSnap.data();
+
+        currentKey = data.password || "NO KEY";
+
+        document.getElementById("showKey").innerHTML =
+        currentKey;
+
+    }
+
+});
+
+// COPY FUNCTION
+
+window.copyKey = function(){
+
+    navigator.clipboard.writeText(currentKey);
+
+    document.getElementById("status").innerHTML =
+    "Key Copied Successfully!";
+
+}
+
+</script>
+
+</body>
+</html>
